@@ -3,11 +3,9 @@ import CarController from '../Controllers/CarController';
 import CarService from '../Services/CarService';
 
 const router = Router();
-const carService = new CarService();
+const service = new CarService();
+const controller = new CarController(service);
 
-router.post(
-  '/cars',
-  (req, res, next) => new CarController(req, res, next, carService).create,
-);
+router.post('/cars', controller.create.bind(controller));
 
 export default router;

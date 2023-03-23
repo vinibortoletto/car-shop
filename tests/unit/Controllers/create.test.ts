@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { NextFunction, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import Sinon, { SinonStub } from 'sinon';
 import CarController from '../../../src/Controllers/CarController';
 import CarService from '../../../src/Services/CarService';
@@ -8,12 +8,13 @@ import { createCarOutput } from '../../mocks/carsMocks';
 describe('Unit tests for "create" method from CarController', function () {
   const req = {} as Request;
   const res = {} as Response;
-  const next = (() => {}) as NextFunction;
+  let next: SinonStub;
     
   const service = new CarService();
   const controller = new CarController(service);
 
   beforeEach(function () {
+    next = Sinon.stub();
     res.status = Sinon.stub().returns(res);
     res.json = Sinon.stub().returns(res);
   });
@@ -27,5 +28,12 @@ describe('Unit tests for "create" method from CarController', function () {
     await controller.create(req, res, next);
     expect((res.status as SinonStub).calledWith(201)).to.equal(true);
     expect((res.json as SinonStub).calledWith(createCarOutput)).to.equal(true);
+  });
+
+  it('should throw Internal Server Error', async function () {
+    const error = new Error('Internal Server Error');
+    Sinon.stub(service, 'create').rejects(error);
+    await controller.create(req, res, next);
+    expect(next.calledWith(error)).to.equal(true);
   });
 });

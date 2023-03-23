@@ -16,7 +16,7 @@ describe('Unit tests for "findById" method from CarController', function () {
   const controller = new CarController(service);
 
   beforeEach(function () {
-    next = Sinon.stub() as unknown as SinonStub; 
+    next = Sinon.stub();
     res.status = Sinon.stub().returns(res);
     res.json = Sinon.stub().returns(res);
   });

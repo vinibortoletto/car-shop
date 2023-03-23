@@ -18,4 +18,17 @@ export default class CarController {
       next(error);
     }
   }
+
+  public async find(
+    req: Request,
+    res: Response, 
+    next: NextFunction,
+  ) {
+    try {
+      const carList = await this._service.find();
+      return res.status(200).json(carList);
+    } catch (error) {
+      next(error);
+    }
+  }
 }

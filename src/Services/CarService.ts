@@ -14,13 +14,16 @@ export default class CarService {
   }
 
   public async find(): Promise<ICar[]> {
-    const carList: ICar[] = await this._model.find();
-    return carList;
+    const unformattedCarList: ICar[] = await this._model.find();
+    const formattedCarList: ICar[] = unformattedCarList.map((car) => new Car(car).format());
+    return formattedCarList;
   }
 
   public async findById(id: string): Promise<ICar | null> {
-    const car: ICar | null = await this._model.findById(id);
-    if (!car) throw new NotFound(carNotFound);
-    return car;
+    const unformattedCar: ICar | null = await this._model.findById(id);
+    if (!unformattedCar) throw new NotFound(carNotFound);
+
+    const formattedCar = new Car(unformattedCar).format();
+    return formattedCar;
   }
 }

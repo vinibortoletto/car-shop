@@ -15,9 +15,9 @@ describe('Unit tests for "findById" method from CarService', function () {
   });
 
   it('should be able to find car by its id', async function () {
-    Sinon.stub(Model, 'findById').resolves(mocks.car);
+    Sinon.stub(Model, 'findById').resolves(mocks.findCarsOutput[0]);
     const result: ICar | null = await carService.findById(mocks.carId);
-    expect(result).to.deep.equal(mocks.car);
+    expect(result).to.deep.equal(mocks.findCarsOutput[0]);
   });
 
   it('should throw NotFound error if car does not exists in the database', async function () {

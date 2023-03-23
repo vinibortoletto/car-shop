@@ -13,9 +13,8 @@ describe('Unit tests for "find" method from CarService', function () {
   });
 
   it('should be able to find all cars', async function () {
-    const output: ICar[] = findCarsOutput;
-    Sinon.stub(Model, 'find').resolves(output);
+    Sinon.stub(Model, 'find').resolves(findCarsOutput);
     const result: ICar[] = await carService.find();
-    expect(result).to.deep.equal(output);
+    expect(result).to.deep.equal(findCarsOutput);
   });
 });

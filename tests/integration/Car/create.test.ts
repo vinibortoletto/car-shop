@@ -7,12 +7,12 @@ import { CREATED } from '../../../src/Utils/httpStatusCodes';
 
 describe('Integration tests for creating new car', function () {
   it('should be able to create new car', async function () {
-    Sinon.stub(Model, 'create').resolves(mocks.createCarOutput);
+    Sinon.stub(Model, 'create').resolves(mocks.carList[0]);
 
     await request(app)
       .post('/cars')
-      .send(mocks.createCarInput)
+      .send(mocks.car)
       .expect(CREATED)
-      .expect(mocks.createCarOutput);
+      .expect(mocks.carList[0]);
   });
 });

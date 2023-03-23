@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import Sinon, { SinonStub } from 'sinon';
 import CarController from '../../../src/Controllers/CarController';
 import CarService from '../../../src/Services/CarService';
-import { createCarOutput } from '../../mocks/carsMocks';
+import * as mocks from '../../mocks/carsMocks';
 
 describe('Unit tests for "create" method from CarController', function () {
   const req = {} as Request;
@@ -24,10 +24,10 @@ describe('Unit tests for "create" method from CarController', function () {
   });
 
   it('should be able to create new car', async function () {
-    Sinon.stub(service, 'create').resolves(createCarOutput);
+    Sinon.stub(service, 'create').resolves(mocks.carList[0]);
     await controller.create(req, res, next);
     expect((res.status as SinonStub).calledWith(201)).to.equal(true);
-    expect((res.json as SinonStub).calledWith(createCarOutput)).to.equal(true);
+    expect((res.json as SinonStub).calledWith(mocks.carList[0])).to.equal(true);
   });
 
   it('should throw Internal Server Error', async function () {

@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 import { Model } from 'mongoose';
 import Sinon from 'sinon';
+import ICar from '../../../src/Interfaces/ICar';
 import CarODM from '../../../src/Models/CarODM';
 import * as mocks from '../../mocks/carsMocks';
 
@@ -13,7 +14,7 @@ describe('Unit tests for "findById" method from CarODM', function () {
 
   it('should be able to find car by its id', async function () {
     Sinon.stub(Model, 'findById').resolves(mocks.car);
-    const result = await model.findById(mocks.carId);
+    const result: ICar | null = await model.findById(mocks.carId);
     expect(result).to.deep.equal(mocks.car);
   });
 });

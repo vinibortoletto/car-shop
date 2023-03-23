@@ -10,4 +10,9 @@ export default class CarService {
     const formattedCar: ICar = new Car(unformattedCar).format();
     return formattedCar;
   }
+
+  public async find(): Promise<ICar[]> {
+    const carList: ICar[] = await this._model.find();
+    return carList;
+  }
 }

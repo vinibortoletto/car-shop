@@ -15,4 +15,9 @@ export default class CarService {
     const carList: ICar[] = await this._model.find();
     return carList;
   }
+
+  public async findById(id: string): Promise<ICar | null> {
+    const car: ICar | null = await this._model.findById(id);
+    return car;
+  }
 }

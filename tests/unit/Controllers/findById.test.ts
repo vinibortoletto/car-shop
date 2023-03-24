@@ -5,6 +5,7 @@ import CarController from '../../../src/Controllers/CarController';
 import NotFound from '../../../src/Errors/NotFound';
 import CarService from '../../../src/Services/CarService';
 import { carNotFound } from '../../../src/Utils/errorMessages';
+import { OK } from '../../../src/Utils/httpStatusCodes';
 import * as mocks from '../../mocks/carsMocks';
 
 describe('Unit tests for "findById" method from CarController', function () {
@@ -31,7 +32,7 @@ describe('Unit tests for "findById" method from CarController', function () {
     
     await controller.findById(req, res, next);
     
-    expect((res.status as SinonStub).calledWith(200)).to.equal(true);
+    expect((res.status as SinonStub).calledWith(OK)).to.equal(true);
     expect((res.json as SinonStub).calledWith(mocks.car)).to.equal(true);
   });
 

@@ -1,5 +1,6 @@
 import { NextFunction, Response, Request } from 'express';
 import CarService from '../Services/CarService';
+import { CREATED, OK } from '../Utils/httpStatusCodes';
 
 export default class CarController {
   constructor(private _service: CarService) {}
@@ -13,7 +14,7 @@ export default class CarController {
     
     try {
       const car = await this._service.create(newCar);
-      return res.status(201).json(car);
+      return res.status(CREATED).json(car);
     } catch (error) {
       next(error);
     }
@@ -26,7 +27,7 @@ export default class CarController {
   ) {
     try {
       const carList = await this._service.find();
-      return res.status(200).json(carList);
+      return res.status(OK).json(carList);
     } catch (error) {
       next(error);
     }
@@ -41,7 +42,7 @@ export default class CarController {
 
     try {
       const car = await this._service.findById(id);
-      return res.status(200).json(car);
+      return res.status(OK).json(car);
     } catch (error) {
       next(error);
     }
@@ -57,7 +58,7 @@ export default class CarController {
 
     try {
       const car = await this._service.findByIdAndUpdate(newCar, id);
-      return res.status(200).json(car);
+      return res.status(OK).json(car);
     } catch (error) {
       next(error);
     }

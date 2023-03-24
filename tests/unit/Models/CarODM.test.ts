@@ -5,7 +5,7 @@ import ICar from '../../../src/Interfaces/ICar';
 import CarODM from '../../../src/Models/CarODM';
 import * as mocks from '../../mocks/carsMocks';
 
-describe('Unit tests for CarODM class', function () {
+describe('Unit tests for "CarODM" class', function () {
   const model = new CarODM();
 
   afterEach(function () {

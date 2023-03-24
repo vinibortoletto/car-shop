@@ -15,7 +15,7 @@ describe('Unit tests for "CarService" class', function () {
     Sinon.restore();
   });
 
-  describe('Unit tests for "create" method', function () {
+  describe('"create" method', function () {
     it('should be able to create a new car', async function () {
       const output: ICar = { ...mocks.carList[0], status: true };
       const input: ICar = mocks.car;
@@ -26,7 +26,7 @@ describe('Unit tests for "CarService" class', function () {
     });
   });
   
-  describe('Unit tests for "find" method', function () {
+  describe('"find" method', function () {
     it('should be able to find all cars', async function () {
       Sinon.stub(Model, 'find').resolves(mocks.carList);
       const result: (Car | null)[] = await carService.find();
@@ -34,7 +34,7 @@ describe('Unit tests for "CarService" class', function () {
     });
   });
   
-  describe('Unit tests for "findById" method', function () {
+  describe('"findById" method', function () {
     it('should be able to find car by its id', async function () {
       Sinon.stub(Model, 'findById').resolves(mocks.carList[0]);
       const result: Car | null = await carService.findById(mocks.carId);
@@ -54,7 +54,7 @@ describe('Unit tests for "CarService" class', function () {
     });
   });
   
-  describe('Unit tests for "findByIdAndUpdate" method', function () {
+  describe('"findByIdAndUpdate" method', function () {
     it('should be able to update a car by its id', async function () {
       Sinon.stub(Model, 'findByIdAndUpdate').resolves(mocks.carList[0]);
       const result: Car | null = await carService.findByIdAndUpdate(mocks.car, mocks.carId);

@@ -37,4 +37,10 @@ export default class CarService implements IService<ICar, Car> {
     if (!carDomain) throw new NotFound(carNotFound);
     return carDomain;
   }
+
+  public async findByIdAndDelete(id: string): Promise<boolean> {
+    const car: ICar | null = await this._model.findByIdAndDelete(id);
+    if (!car) throw new NotFound(carNotFound);
+    return true;
+  }
 }

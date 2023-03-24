@@ -7,6 +7,10 @@ import { NOT_FOUND, OK, UNPROCESSABLE_CONTENT } from '../../../src/Utils/httpSta
 import { carNotFound, invalidId } from '../../../src/Utils/errorMessages';
 
 describe('Integration tests for finding a car by its id', function () {
+  afterEach(function () {
+    Sinon.restore();
+  });
+
   it('should be able to find a car by its id', async function () {
     Sinon.stub(Model, 'findById').resolves(mocks.carList[0]);
 

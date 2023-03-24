@@ -1,6 +1,8 @@
 import { Motorcycle } from '../Domains';
+import NotFound from '../Errors/NotFound';
 import { IMotorcycle } from '../Interfaces';
 import { MotorcycleODM } from '../Models';
+import { motorcycleNotFound } from '../Utils/errorMessages';
 
 export default class MotorcycleService {
   private _model = new MotorcycleODM();
@@ -23,5 +25,12 @@ export default class MotorcycleService {
       (motorcycle) => this.createMotorcycleDomain(motorcycle),
     );
     return motorcycleDomainList;
+  }
+
+  public async findById(id: string): Promise<Motorcycle | null> {
+    const motorcycle: IMotorcycle | null = await this._model.findById(id);
+    const motorcycleDomain: Motorcycle | null = this.createMotorcycleDomain(motorcycle);
+    if (!motorcycleDomain) throw new NotFound(motorcycleNotFound);
+    return motorcycleDomain;
   }
 }

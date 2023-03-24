@@ -23,4 +23,10 @@ motorcycleRouter.get(
   controller.findById.bind(controller),
 );
 
+motorcycleRouter.put(
+  '/motorcycles/:id',
+  ValidateId.validate,
+  controller.findByIdAndUpdate.bind(controller),
+);
+
 export default motorcycleRouter;

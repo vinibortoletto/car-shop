@@ -43,4 +43,12 @@ describe('Unit tests for "CarODM" class', function () {
       expect(result).to.deep.equal(mocks.carList[0]);
     });
   });
+
+  describe('"findByIdAndDelete" method', function () {
+    it('should be able to update a car by its id', async function () {
+      Sinon.stub(Model, 'findByIdAndDelete').resolves(true);
+      const result: ICar | null = await model.findByIdAndDelete(mocks.carId);
+      expect(result).to.deep.equal(true);
+    });
+  });
 });

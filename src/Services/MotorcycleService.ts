@@ -47,4 +47,10 @@ export default class MotorcycleService {
     if (!motorcycleDomain) throw new NotFound(motorcycleNotFound);
     return motorcycleDomain;
   }
+
+  public async findByIdAndDelete(id: string): Promise<boolean> {
+    const motorcycle: IMotorcycle | null = await this._model.findByIdAndDelete(id);
+    if (!motorcycle) throw new NotFound(motorcycleNotFound);
+    return true;
+  }
 }

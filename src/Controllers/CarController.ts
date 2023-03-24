@@ -1,4 +1,6 @@
 import { NextFunction, Response, Request } from 'express';
+import { Car } from '../Domains';
+import { ICar } from '../Interfaces';
 import CarService from '../Services/CarService';
 import { CREATED, OK } from '../Utils/httpStatusCodes';
 
@@ -10,10 +12,10 @@ export default class CarController {
     res: Response, 
     next: NextFunction,
   ) {
-    const newCar = req.body;
+    const newCar: ICar = req.body;
     
     try {
-      const car = await this._service.create(newCar);
+      const car: Car | null = await this._service.create(newCar);
       return res.status(CREATED).json(car);
     } catch (error) {
       next(error);
@@ -26,7 +28,7 @@ export default class CarController {
     next: NextFunction,
   ) {
     try {
-      const carList = await this._service.find();
+      const carList: (Car | null)[] = await this._service.find();
       return res.status(OK).json(carList);
     } catch (error) {
       next(error);
@@ -41,7 +43,7 @@ export default class CarController {
     const { id } = req.params;
 
     try {
-      const car = await this._service.findById(id);
+      const car: Car | null = await this._service.findById(id);
       return res.status(OK).json(car);
     } catch (error) {
       next(error);
@@ -54,10 +56,10 @@ export default class CarController {
     next: NextFunction,
   ) {
     const { id } = req.params;
-    const newCar = req.body;
+    const newCar: ICar = req.body;
 
     try {
-      const car = await this._service.findByIdAndUpdate(newCar, id);
+      const car: Car | null = await this._service.findByIdAndUpdate(newCar, id);
       return res.status(OK).json(car);
     } catch (error) {
       next(error);

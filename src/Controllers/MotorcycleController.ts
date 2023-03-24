@@ -2,7 +2,7 @@ import { NextFunction, Response, Request } from 'express';
 import { Motorcycle } from '../Domains';
 import { IMotorcycle } from '../Interfaces';
 import MotorcycleService from '../Services/MotorcycleService';
-import { CREATED, OK } from '../Utils/httpStatusCodes';
+import { CREATED, NO_CONTENT, OK } from '../Utils/httpStatusCodes';
 
 export default class MotorcycleController {
   constructor(private _service: MotorcycleService) {}
@@ -64,6 +64,21 @@ export default class MotorcycleController {
         .findByIdAndUpdate(newMotorcycle, id);
 
       return res.status(OK).json(motorcycle);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async findByIdAndDelete(
+    req: Request,
+    res: Response, 
+    next: NextFunction,
+  ) {
+    const { id } = req.params;
+
+    try {
+      await this._service.findByIdAndDelete(id);
+      return res.status(NO_CONTENT).json();
     } catch (error) {
       next(error);
     }

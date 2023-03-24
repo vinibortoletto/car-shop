@@ -1,10 +1,10 @@
 import { Motorcycle } from '../Domains';
 import NotFound from '../Errors/NotFound';
-import { IMotorcycle } from '../Interfaces';
+import { IMotorcycle, IService } from '../Interfaces';
 import { MotorcycleODM } from '../Models';
 import { motorcycleNotFound } from '../Utils/errorMessages';
 
-export default class MotorcycleService {
+export default class MotorcycleService implements IService<IMotorcycle, Motorcycle> {
   private _model = new MotorcycleODM();
 
   private createMotorcycleDomain(

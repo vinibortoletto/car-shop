@@ -15,4 +15,10 @@ router.get(
   controller.findById.bind(controller),
 );
 
+router.put(
+  '/cars/:id', 
+  ValidateId.validate,
+  controller.findByIdAndUpdate.bind(controller),
+);
+
 export default router;

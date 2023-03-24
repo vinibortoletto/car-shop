@@ -28,7 +28,7 @@ describe('Unit tests for "findById" method from CarController', function () {
   });
 
   it('should be able to find car by its id', async function () {
-    const output = new Car(mocks.car);
+    const output: Car = new Car(mocks.car);
     Sinon.stub(service, 'findById').resolves(output);
     req = { params: mocks.carId } as unknown as Request;
     

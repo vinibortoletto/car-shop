@@ -26,7 +26,7 @@ describe('Unit tests for "find" method from CarController', function () {
   });
 
   it('should be able to find all cars', async function () {
-    const output = mocks.carList.map((car) => new Car(car));
+    const output: Car[] = mocks.carList.map((car) => new Car(car));
     Sinon.stub(service, 'find').resolves(output);
     await controller.find(req, res, next);
     expect((res.status as SinonStub).calledWith(OK)).to.equal(true);

@@ -26,7 +26,7 @@ describe('Unit tests for "create" method from CarController', function () {
   });
 
   it('should be able to create new car', async function () {
-    const output = new Car(mocks.carList[0]);
+    const output: Car = new Car(mocks.carList[0]);
     Sinon.stub(service, 'create').resolves(output);
     
     await controller.create(req, res, next);

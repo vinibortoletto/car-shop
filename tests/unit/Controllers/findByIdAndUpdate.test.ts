@@ -33,7 +33,7 @@ describe('Unit tests for "findByIdAndUpdate" method from CarController', functio
       body: mocks.car,
     } as unknown as Request;
 
-    const output = new Car(mocks.carList[0]);
+    const output: Car = new Car(mocks.carList[0]);
     Sinon.stub(service, 'findByIdAndUpdate').resolves(output);
     await controller.findByIdAndUpdate(req, res, next);
     expect((res.status as SinonStub).calledWith(OK)).to.equal(true);

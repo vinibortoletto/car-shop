@@ -2,7 +2,7 @@ import request from 'supertest';
 import { Model } from 'mongoose';
 import Sinon from 'sinon';
 import app from '../../../src/app';
-import { CREATED } from '../../../src/Utils/httpStatusCodes';
+import { CREATED, OK } from '../../../src/Utils/httpStatusCodes';
 import { motorcycle, motorcycleList } from '../../mocks/motorcyclesMocks';
 
 describe('Integration tests for "motorcycles" routes', function () {
@@ -15,6 +15,17 @@ describe('Integration tests for "motorcycles" routes', function () {
         .send(motorcycle)
         .expect(CREATED)
         .expect(motorcycleList[0]);
+    });
+  });
+
+  describe('GET /motorcycles', function () {
+    it('should be able to find all motorcycles', async function () {
+      Sinon.stub(Model, 'find').resolves(motorcycleList);
+  
+      await request(app)
+        .get('/motorcycles')
+        .expect(OK)
+        .expect(motorcycleList);
     });
   });
 });

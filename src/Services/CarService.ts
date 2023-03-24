@@ -1,10 +1,11 @@
 import Car from '../Domains/Car';
 import NotFound from '../Errors/NotFound';
+import { IService } from '../Interfaces';
 import ICar from '../Interfaces/ICar';
 import CarODM from '../Models/CarODM';
 import { carNotFound } from '../Utils/errorMessages';
 
-export default class CarService {
+export default class CarService implements IService<ICar, Car> {
   private _model = new CarODM();
 
   private createCarDomain(car: ICar | null): Car | null {

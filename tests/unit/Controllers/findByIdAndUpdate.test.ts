@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { Request, Response } from 'express';
 import Sinon, { SinonStub } from 'sinon';
 import CarController from '../../../src/Controllers/CarController';
+import Car from '../../../src/Domains/Car';
 import CarService from '../../../src/Services/CarService';
 import { OK } from '../../../src/Utils/httpStatusCodes';
 import * as mocks from '../../mocks/carsMocks';
@@ -30,9 +31,10 @@ describe('Unit tests for "findByIdAndUpdate" method from CarController', functio
       body: mocks.car,
     } as unknown as Request;
 
-    Sinon.stub(service, 'findByIdAndUpdate').resolves(mocks.carList[0]);
+    const output = new Car(mocks.carList[0]);
+    Sinon.stub(service, 'findByIdAndUpdate').resolves(output);
     await controller.findByIdAndUpdate(req, res, next);
     expect((res.status as SinonStub).calledWith(OK)).to.equal(true);
-    expect((res.json as SinonStub).calledWith(mocks.carList[0])).to.equal(true);
+    expect((res.json as SinonStub).calledWith(output)).to.equal(true);
   });
 });

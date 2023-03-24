@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { Request, Response } from 'express';
 import Sinon, { SinonStub } from 'sinon';
 import CarController from '../../../src/Controllers/CarController';
+import Car from '../../../src/Domains/Car';
 import CarService from '../../../src/Services/CarService';
 import { OK } from '../../../src/Utils/httpStatusCodes';
 import * as mocks from '../../mocks/carsMocks';
@@ -25,10 +26,11 @@ describe('Unit tests for "find" method from CarController', function () {
   });
 
   it('should be able to find all cars', async function () {
-    Sinon.stub(service, 'find').resolves(mocks.carList);
+    const output = mocks.carList.map((car) => new Car(car));
+    Sinon.stub(service, 'find').resolves(output);
     await controller.find(req, res, next);
     expect((res.status as SinonStub).calledWith(OK)).to.equal(true);
-    expect((res.json as SinonStub).calledWith(mocks.carList)).to.equal(true);
+    expect((res.json as SinonStub).calledWith(output)).to.equal(true);
   });
 
   it('should throw Internal Server Error', async function () {

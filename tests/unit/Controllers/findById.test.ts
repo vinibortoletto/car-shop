@@ -2,6 +2,7 @@ import { expect } from 'chai';
 import { Request, Response } from 'express';
 import Sinon, { SinonStub } from 'sinon';
 import CarController from '../../../src/Controllers/CarController';
+import Car from '../../../src/Domains/Car';
 import NotFound from '../../../src/Errors/NotFound';
 import CarService from '../../../src/Services/CarService';
 import { carNotFound } from '../../../src/Utils/errorMessages';
@@ -27,13 +28,14 @@ describe('Unit tests for "findById" method from CarController', function () {
   });
 
   it('should be able to find car by its id', async function () {
-    Sinon.stub(service, 'findById').resolves(mocks.car);
+    const output = new Car(mocks.car);
+    Sinon.stub(service, 'findById').resolves(output);
     req = { params: mocks.carId } as unknown as Request;
     
     await controller.findById(req, res, next);
     
     expect((res.status as SinonStub).calledWith(OK)).to.equal(true);
-    expect((res.json as SinonStub).calledWith(mocks.car)).to.equal(true);
+    expect((res.json as SinonStub).calledWith(output)).to.equal(true);
   });
 
   it('should throw NotFound error if car does not exists in the database', async function () {

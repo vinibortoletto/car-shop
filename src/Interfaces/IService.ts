@@ -3,4 +3,5 @@ export default interface IService<T, U> {
   find(): Promise<(U | null)[]>;
   findById(id: string): Promise<U | null>;
   findByIdAndUpdate(newObj: T, id: string): Promise<U | null>;
+  findByIdAndDelete(id:string): Promise<boolean>;
 }

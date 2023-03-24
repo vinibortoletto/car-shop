@@ -77,4 +77,27 @@ describe('Unit tests for "MotorcycleService" class', function () {
       }
     });
   });
+
+  describe('"findByIdAndDelete" method', function () {
+    it('should be able to remove a motorcycle by its id', async function () {
+      Sinon.stub(Model, 'findByIdAndDelete').resolves(true);
+      const result: boolean = await service.findByIdAndDelete(mocks.motorcycleId);
+      expect(result).to.deep.equal(true);
+    });
+  
+    it(
+      'should throw NotFound error if motorcycle does not exists in the database', 
+      async function () {
+        Sinon.stub(Model, 'findByIdAndDelete').resolves(null);
+  
+        try {
+          await service.findByIdAndDelete('wrong id');
+        } catch (error) {
+          expect(error).to.be.instanceof(Error);
+          expect((error as Error).message).to.equal(motorcycleNotFound);
+          expect((error as Error).stack).to.equal(String(NOT_FOUND));
+        }
+      },
+    );
+  });
 });

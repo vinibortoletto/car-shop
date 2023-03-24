@@ -11,32 +11,29 @@ export default class CarService {
     if (!car) return null;
     return new Car(car);
   }
-  
-  public async create(newCar: ICar): Promise<ICar> {
-    const unformattedCar: ICar = await this._model.create(newCar);
-    const formattedCar: ICar = new Car(unformattedCar).format();
-    return formattedCar;
+
+  public async create(newCar: ICar): Promise<Car | null> {
+    const car: ICar = await this._model.create(newCar);
+    return this.createCarDomain(car);
   }
 
-  public async find(): Promise<ICar[]> {
-    const unformattedCarList: ICar[] = await this._model.find();
-    const formattedCarList: ICar[] = unformattedCarList.map((car) => new Car(car).format());
-    return formattedCarList;
+  public async find(): Promise<(Car | null)[]> {
+    const carList: ICar[] = await this._model.find();
+    const carDomainList: (Car | null)[] = carList.map((car) => this.createCarDomain(car));
+    return carDomainList;
   }
 
-  public async findById(id: string): Promise<ICar | null> {
-    const unformattedCar: ICar | null = await this._model.findById(id);
-    if (!unformattedCar) throw new NotFound(carNotFound);
-
-    const formattedCar = new Car(unformattedCar).format();
-    return formattedCar;
+  public async findById(id: string): Promise<Car | null> {
+    const car: ICar | null = await this._model.findById(id);
+    const carDomain: Car | null = this.createCarDomain(car);
+    if (!carDomain) throw new NotFound(carNotFound);
+    return carDomain;
   }
   
-  public async findByIdAndUpdate(newCar:ICar, id: string): Promise<ICar | null> {
-    const unformattedCar: ICar | null = await this._model.findByIdAndUpdate(newCar, id);
-    if (!unformattedCar) throw new NotFound(carNotFound);
-    
-    const formattedCar = new Car(unformattedCar).format();
-    return formattedCar;
+  public async findByIdAndUpdate(newCar:ICar, id: string): Promise<Car | null> {
+    const car: ICar | null = await this._model.findByIdAndUpdate(newCar, id);
+    const carDomain: Car | null = this.createCarDomain(car);
+    if (!carDomain) throw new NotFound(carNotFound);
+    return carDomain;
   }
 }

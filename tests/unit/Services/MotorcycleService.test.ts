@@ -56,4 +56,25 @@ describe('Unit tests for "MotorcycleService" class', function () {
       },
     );
   });
+
+  describe('"findByIdAndUpdate" method', function () {
+    it('should be able to update a motorcycle by its id', async function () {
+      Sinon.stub(Model, 'findByIdAndUpdate').resolves(mocks.motorcycleList[0]);
+      const result: Motorcycle | null = await service
+        .findByIdAndUpdate(mocks.motorcycle, mocks.motorcycleId);
+      expect(result).to.deep.equal(mocks.motorcycleList[0]);
+    });
+  
+    it('should throw NotFound error if car does not exists in the database', async function () {
+      Sinon.stub(Model, 'findByIdAndUpdate').resolves(null);
+  
+      try {
+        await service.findByIdAndUpdate(mocks.motorcycle, 'wrong id');
+      } catch (error) {
+        expect(error).to.be.instanceof(Error);
+        expect((error as Error).message).to.equal(motorcycleNotFound);
+        expect((error as Error).stack).to.equal(String(NOT_FOUND));
+      }
+    });
+  });
 });

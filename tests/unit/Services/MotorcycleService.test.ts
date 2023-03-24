@@ -23,4 +23,12 @@ describe('Unit tests for "MotorcycleService" class', function () {
       expect(result).to.deep.equal(output);
     });
   });
+
+  describe('"find" method', function () {
+    it('should be able to find all motorcycles', async function () {
+      Sinon.stub(Model, 'find').resolves(motorcycleList);
+      const result: (Motorcycle | null)[] = await service.find();
+      expect(result).to.deep.equal(motorcycleList);
+    });
+  });
 });

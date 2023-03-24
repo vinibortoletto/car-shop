@@ -4,7 +4,9 @@ import Sinon from 'sinon';
 import { Motorcycle } from '../../../src/Domains';
 import { IMotorcycle } from '../../../src/Interfaces';
 import MotorcycleService from '../../../src/Services/MotorcycleService';
-import { motorcycle, motorcycleList } from '../../mocks/motorcyclesMocks';
+import { motorcycleNotFound } from '../../../src/Utils/errorMessages';
+import { NOT_FOUND } from '../../../src/Utils/httpStatusCodes';
+import { motorcycle, motorcycleId, motorcycleList } from '../../mocks/motorcyclesMocks';
 
 describe('Unit tests for "MotorcycleService" class', function () {
   const service = new MotorcycleService();
@@ -30,5 +32,28 @@ describe('Unit tests for "MotorcycleService" class', function () {
       const result: (Motorcycle | null)[] = await service.find();
       expect(result).to.deep.equal(motorcycleList);
     });
+  });
+
+  describe('"findById" method', function () {
+    it('should be able to find motorcycle by its id', async function () {
+      Sinon.stub(Model, 'findById').resolves(motorcycleList[0]);
+      const result: Motorcycle | null = await service.findById(motorcycleId);
+      expect(result).to.deep.equal(motorcycleList[0]);
+    });
+  
+    it(
+      'should throw NotFound error if motorcycle does not exists in the database', 
+      async function () {
+        Sinon.stub(Model, 'findById').resolves(null);
+  
+        try {
+          await service.findById('wrong id');
+        } catch (error) {
+          expect(error).to.be.instanceof(Error);
+          expect((error as Error).message).to.equal(motorcycleNotFound);
+          expect((error as Error).stack).to.equal(String(NOT_FOUND));
+        }
+      },
+    );
   });
 });

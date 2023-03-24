@@ -65,4 +65,42 @@ describe('Integration tests for "motorcycles" routes', function () {
         .expect({ message: invalidId });
     });
   });
+
+  describe('PUT /cars/:id', function () {
+    afterEach(function () {
+      Sinon.restore();
+    });
+  
+    it('should be able to update a motorcycle by its id', async function () {
+      Sinon.stub(Model, 'findByIdAndUpdate').resolves(mocks.motorcycleList[0]);
+  
+      await request(app)
+        .put(`/motorcycles/${mocks.motorcycleId}`)
+        .expect(OK)
+        .expect(mocks.motorcycleList[0]);
+    });
+  
+    it(
+      'should throw NotFound error if motorcycle does not exists in the database',
+      async function () {
+        Sinon.stub(Model, 'findByIdAndUpdate').resolves(null);
+  
+        await request(app)
+          .put(`/motorcycles/${mocks.motorcycleId}`)
+          .send(mocks.motorcycle)
+          .expect(NOT_FOUND)
+          .expect({ message: motorcycleNotFound });
+      },
+    );
+  
+    it('should throw UnprocessableContent error if id is invalid', async function () {
+      Sinon.stub(Model, 'findByIdAndUpdate').resolves(null);
+  
+      await request(app)
+        .put('/motorcycles/invalid-id')
+        .send(mocks.motorcycle)
+        .expect(UNPROCESSABLE_CONTENT)
+        .expect({ message: invalidId });
+    });
+  });
 });

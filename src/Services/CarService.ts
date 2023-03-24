@@ -26,4 +26,12 @@ export default class CarService {
     const formattedCar = new Car(unformattedCar).format();
     return formattedCar;
   }
+  
+  public async findByIdAndUpdate(newCar:ICar, id: string): Promise<ICar | null> {
+    const unformattedCar: ICar | null = await this._model.findByIdAndUpdate(newCar, id);
+    if (!unformattedCar) throw new NotFound(carNotFound);
+    
+    const formattedCar = new Car(unformattedCar).format();
+    return formattedCar;
+  }
 }

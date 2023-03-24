@@ -2,7 +2,7 @@ import { NextFunction, Response, Request } from 'express';
 import { Car } from '../Domains';
 import { ICar } from '../Interfaces';
 import CarService from '../Services/CarService';
-import { CREATED, OK } from '../Utils/httpStatusCodes';
+import { CREATED, NO_CONTENT, OK } from '../Utils/httpStatusCodes';
 
 export default class CarController {
   constructor(private _service: CarService) {}
@@ -61,6 +61,21 @@ export default class CarController {
     try {
       const car: Car | null = await this._service.findByIdAndUpdate(newCar, id);
       return res.status(OK).json(car);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async findByIdAndDelete(
+    req: Request,
+    res: Response, 
+    next: NextFunction,
+  ) {
+    const { id } = req.params;
+
+    try {
+      await this._service.findByIdAndDelete(id);
+      return res.status(NO_CONTENT).json();
     } catch (error) {
       next(error);
     }

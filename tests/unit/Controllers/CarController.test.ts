@@ -6,7 +6,7 @@ import Car from '../../../src/Domains/Car';
 import NotFound from '../../../src/Errors/NotFound';
 import CarService from '../../../src/Services/CarService';
 import { carNotFound } from '../../../src/Utils/errorMessages';
-import { CREATED, OK } from '../../../src/Utils/httpStatusCodes';
+import { CREATED, NO_CONTENT, OK } from '../../../src/Utils/httpStatusCodes';
 import * as mocks from '../../mocks/carsMocks';
 
 describe('Unit tests for "CarController" class', function () {
@@ -109,6 +109,32 @@ describe('Unit tests for "CarController" class', function () {
       Sinon.stub(service, 'findById').rejects(error);
   
       await controller.findById(req, res, next);
+      expect(next.calledWith(error)).to.equal(true);
+    });
+  });
+
+  describe('"findByIdAndDelete" method', function () {
+    it('should be able to delete a car by its id', async function () {
+      req = { 
+        params: { id: mocks.carId }, 
+        body: mocks.car,
+      } as unknown as Request;
+  
+      Sinon.stub(service, 'findByIdAndDelete').resolves();
+      await controller.findByIdAndDelete(req, res, next);
+      expect((res.status as SinonStub).calledWith(NO_CONTENT)).to.equal(true);
+    });
+  
+    it('should throw NotFound error if car does not exists in the database', async function () {
+      req = { 
+        params: { id: 'wrong id' }, 
+        body: mocks.car,
+      } as unknown as Request;
+  
+      const error = new NotFound(carNotFound);
+      Sinon.stub(service, 'findByIdAndDelete').rejects(error);
+  
+      await controller.findByIdAndDelete(req, res, next);
       expect(next.calledWith(error)).to.equal(true);
     });
   });

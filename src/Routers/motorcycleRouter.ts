@@ -29,4 +29,10 @@ motorcycleRouter.put(
   controller.findByIdAndUpdate.bind(controller),
 );
 
+motorcycleRouter.delete(
+  '/motorcycles/:id', 
+  ValidateId.validate,
+  controller.findByIdAndDelete.bind(controller),
+);
+
 export default motorcycleRouter;

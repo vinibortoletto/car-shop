@@ -7,14 +7,11 @@ import Car from '../../../src/Domains/Car';
 
 describe('Unit tests for "find" method from CarService', function () {
   const carService = new CarService();
-
-  afterEach(function () {
-    Sinon.restore();
-  });
-
+  
   it('should be able to find all cars', async function () {
     Sinon.stub(Model, 'find').resolves(mocks.carList);
     const result: (Car | null)[] = await carService.find();
     expect(result).to.deep.equal(mocks.carList);
+    Sinon.restore();
   });
 });

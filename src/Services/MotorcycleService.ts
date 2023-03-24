@@ -33,4 +33,18 @@ export default class MotorcycleService {
     if (!motorcycleDomain) throw new NotFound(motorcycleNotFound);
     return motorcycleDomain;
   }
+
+  public async findByIdAndUpdate(
+    newMotorcycle:IMotorcycle, 
+    id: string,
+  ): Promise<Motorcycle | null> {
+    const motorcycle: IMotorcycle | null = await this._model
+      .findByIdAndUpdate(newMotorcycle, id);
+    
+    const motorcycleDomain: Motorcycle | null = this
+      .createMotorcycleDomain(motorcycle);
+    
+    if (!motorcycleDomain) throw new NotFound(motorcycleNotFound);
+    return motorcycleDomain;
+  }
 }

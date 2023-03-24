@@ -77,13 +77,47 @@ describe('Unit tests for "MotorcycleController" class', function () {
       expect((res.json as SinonStub).calledWith(output)).to.equal(true);
     });
   
-    it('should throw NotFound error if car does not exists in the database', async function () {
-      req = { params: 'wrong id' } as unknown as Request;
-      const error = new NotFound(motorcycleNotFound);
-      Sinon.stub(service, 'findById').rejects(error);
+    it(
+      'should throw NotFound error if motorcycle does not exists in the database', 
+      async function () {
+        req = { params: 'wrong id' } as unknown as Request;
+        const error = new NotFound(motorcycleNotFound);
+        Sinon.stub(service, 'findById').rejects(error);
   
-      await controller.findById(req, res, next);
-      expect(next.calledWith(error)).to.equal(true);
+        await controller.findById(req, res, next);
+        expect(next.calledWith(error)).to.equal(true);
+      },
+    );
+  });
+
+  describe('"findByIdAndUpdate" method', function () {
+    it('should be able to update a motorcycle by its id', async function () {
+      req = { 
+        params: { id: mocks.motorcycleId }, 
+        body: mocks.motorcycle,
+      } as unknown as Request;
+  
+      const output: Motorcycle = new Motorcycle(mocks.motorcycleList[0]);
+      Sinon.stub(service, 'findByIdAndUpdate').resolves(output);
+      await controller.findByIdAndUpdate(req, res, next);
+      expect((res.status as SinonStub).calledWith(OK)).to.equal(true);
+      expect((res.json as SinonStub).calledWith(output)).to.equal(true);
     });
+  
+    it(
+      'should throw NotFound error if motorcycle does not exists in the database', 
+      async function () {
+        req = { 
+          params: { id: 'wrong id' }, 
+          body: mocks.motorcycle,
+        } as unknown as Request;
+  
+        const error = new NotFound(motorcycleNotFound);
+        Sinon.stub(service, 'findById').rejects(error);
+  
+        await controller.findById(req, res, next);
+        expect(next.calledWith(error)).to.equal(true);
+      },
+    );
   });
 });

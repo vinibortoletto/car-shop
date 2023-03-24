@@ -1,56 +1,18 @@
 import { Motorcycle } from '../Domains';
-import NotFound from '../Errors/NotFound';
-import { IMotorcycle, IService } from '../Interfaces';
+import { IMotorcycle } from '../Interfaces';
 import { MotorcycleODM } from '../Models';
 import { motorcycleNotFound } from '../Utils/errorMessages';
+import AbstractService from './AbstractService';
 
-export default class MotorcycleService implements IService<IMotorcycle, Motorcycle> {
-  private _model = new MotorcycleODM();
+export default class MotorcycleService extends AbstractService<IMotorcycle, Motorcycle> {
+  constructor() {
+    const model = new MotorcycleODM();
+    const domain = MotorcycleService.createDomain;
+    super(model, domain, motorcycleNotFound);
+  }
 
-  private createMotorcycleDomain(
-    motorcycle: IMotorcycle | null,
-  ): Motorcycle | null {
+  static createDomain(motorcycle: IMotorcycle | null): Motorcycle | null {
     if (!motorcycle) return null;
     return new Motorcycle(motorcycle);
-  }
-
-  public async create(newMotorcycle: IMotorcycle): Promise<Motorcycle | null> {
-    const motorcycle: IMotorcycle = await this._model.create(newMotorcycle);
-    return this.createMotorcycleDomain(motorcycle);
-  }
-
-  public async find(): Promise<(Motorcycle | null)[]> {
-    const motorcycleList: IMotorcycle[] = await this._model.find();
-    const motorcycleDomainList: (Motorcycle | null)[] = motorcycleList.map(
-      (motorcycle) => this.createMotorcycleDomain(motorcycle),
-    );
-    return motorcycleDomainList;
-  }
-
-  public async findById(id: string): Promise<Motorcycle | null> {
-    const motorcycle: IMotorcycle | null = await this._model.findById(id);
-    const motorcycleDomain: Motorcycle | null = this.createMotorcycleDomain(motorcycle);
-    if (!motorcycleDomain) throw new NotFound(motorcycleNotFound);
-    return motorcycleDomain;
-  }
-
-  public async findByIdAndUpdate(
-    newMotorcycle:IMotorcycle, 
-    id: string,
-  ): Promise<Motorcycle | null> {
-    const motorcycle: IMotorcycle | null = await this._model
-      .findByIdAndUpdate(newMotorcycle, id);
-    
-    const motorcycleDomain: Motorcycle | null = this
-      .createMotorcycleDomain(motorcycle);
-    
-    if (!motorcycleDomain) throw new NotFound(motorcycleNotFound);
-    return motorcycleDomain;
-  }
-
-  public async findByIdAndDelete(id: string): Promise<boolean> {
-    const motorcycle: IMotorcycle | null = await this._model.findByIdAndDelete(id);
-    if (!motorcycle) throw new NotFound(motorcycleNotFound);
-    return true;
   }
 }

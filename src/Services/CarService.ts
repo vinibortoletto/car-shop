@@ -1,46 +1,18 @@
-import Car from '../Domains/Car';
-import NotFound from '../Errors/NotFound';
-import { IService } from '../Interfaces';
-import ICar from '../Interfaces/ICar';
-import CarODM from '../Models/CarODM';
+import { Car } from '../Domains';
+import { ICar } from '../Interfaces';
+import { CarODM } from '../Models';
 import { carNotFound } from '../Utils/errorMessages';
+import AbstractService from './AbstractService';
 
-export default class CarService implements IService<ICar, Car> {
-  private _model = new CarODM();
+export default class CarService extends AbstractService<ICar, Car> {
+  constructor() {
+    const model = new CarODM();
+    const domain = CarService.createDomain;
+    super(model, domain, carNotFound);
+  }
 
-  private createCarDomain(car: ICar | null): Car | null {
+  static createDomain(car: ICar | null): Car | null {
     if (!car) return null;
     return new Car(car);
-  }
-
-  public async create(newCar: ICar): Promise<Car | null> {
-    const car: ICar = await this._model.create(newCar);
-    return this.createCarDomain(car);
-  }
-
-  public async find(): Promise<(Car | null)[]> {
-    const carList: ICar[] = await this._model.find();
-    const carDomainList: (Car | null)[] = carList.map((car) => this.createCarDomain(car));
-    return carDomainList;
-  }
-
-  public async findById(id: string): Promise<Car | null> {
-    const car: ICar | null = await this._model.findById(id);
-    const carDomain: Car | null = this.createCarDomain(car);
-    if (!carDomain) throw new NotFound(carNotFound);
-    return carDomain;
-  }
-  
-  public async findByIdAndUpdate(newCar:ICar, id: string): Promise<Car | null> {
-    const car: ICar | null = await this._model.findByIdAndUpdate(newCar, id);
-    const carDomain: Car | null = this.createCarDomain(car);
-    if (!carDomain) throw new NotFound(carNotFound);
-    return carDomain;
-  }
-
-  public async findByIdAndDelete(id: string): Promise<boolean> {
-    const car: ICar | null = await this._model.findByIdAndDelete(id);
-    if (!car) throw new NotFound(carNotFound);
-    return true;
   }
 }

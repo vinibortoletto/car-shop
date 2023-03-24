@@ -21,4 +21,10 @@ carRouter.put(
   controller.findByIdAndUpdate.bind(controller),
 );
 
+carRouter.delete(
+  '/cars/:id', 
+  ValidateId.validate,
+  controller.findByIdAndDelete.bind(controller),
+);
+
 export default carRouter;

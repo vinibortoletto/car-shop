@@ -6,7 +6,7 @@ import { IMotorcycle } from '../../../src/Interfaces';
 import MotorcycleService from '../../../src/Services/MotorcycleService';
 import { motorcycleNotFound } from '../../../src/Utils/errorMessages';
 import { NOT_FOUND } from '../../../src/Utils/httpStatusCodes';
-import { motorcycle, motorcycleId, motorcycleList } from '../../mocks/motorcyclesMocks';
+import * as mocks from '../../mocks/motorcyclesMocks';
 
 describe('Unit tests for "MotorcycleService" class', function () {
   const service = new MotorcycleService();
@@ -17,8 +17,8 @@ describe('Unit tests for "MotorcycleService" class', function () {
 
   describe('"create" method', function () {
     it('should be able to create a new motorcycle', async function () {
-      const output: IMotorcycle = { ...motorcycleList[0], status: true };
-      const input: IMotorcycle = motorcycle;
+      const output: IMotorcycle = { ...mocks.motorcycleList[0], status: true };
+      const input: IMotorcycle = mocks.motorcycle;
       Sinon.stub(Model, 'create').resolves(output);
   
       const result: Motorcycle | null = await service.create(input);
@@ -28,17 +28,17 @@ describe('Unit tests for "MotorcycleService" class', function () {
 
   describe('"find" method', function () {
     it('should be able to find all motorcycles', async function () {
-      Sinon.stub(Model, 'find').resolves(motorcycleList);
+      Sinon.stub(Model, 'find').resolves(mocks.motorcycleList);
       const result: (Motorcycle | null)[] = await service.find();
-      expect(result).to.deep.equal(motorcycleList);
+      expect(result).to.deep.equal(mocks.motorcycleList);
     });
   });
 
   describe('"findById" method', function () {
     it('should be able to find motorcycle by its id', async function () {
-      Sinon.stub(Model, 'findById').resolves(motorcycleList[0]);
-      const result: Motorcycle | null = await service.findById(motorcycleId);
-      expect(result).to.deep.equal(motorcycleList[0]);
+      Sinon.stub(Model, 'findById').resolves(mocks.motorcycleList[0]);
+      const result: Motorcycle | null = await service.findById(mocks.motorcycleId);
+      expect(result).to.deep.equal(mocks.motorcycleList[0]);
     });
   
     it(

@@ -7,7 +7,7 @@ export default class AbstractODM<T> {
     protected _schema: Schema,
     protected _modelName: string,
   ) {
-    this._model = models.Car || model(this._modelName, this._schema);
+    this._model = models[this._modelName] || model(this._modelName, this._schema);
   }
 
   public async create(obj: T): Promise<T> {

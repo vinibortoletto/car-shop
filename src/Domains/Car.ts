@@ -40,17 +40,4 @@ export default class Car {
   public getBuyValue(): number {
     return this.buyValue;
   }
-
-  public format(): ICar {
-    return {
-      id: this.id,
-      model: this.model,
-      year: this.year,
-      color: this.color,
-      status: this.status,
-      buyValue: this.buyValue,
-      doorsQty: this.doorsQty,
-      seatsQty: this.seatsQty,
-    };
-  }
 }

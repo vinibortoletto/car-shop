@@ -3,7 +3,13 @@ import { Model } from 'mongoose';
 import Sinon from 'sinon';
 import * as mocks from '../../mocks/carsMocks';
 import app from '../../../src/app';
-import { CREATED, NOT_FOUND, OK, UNPROCESSABLE_CONTENT } from '../../../src/Utils/httpStatusCodes';
+import { 
+  CREATED, 
+  NOT_FOUND, 
+  NO_CONTENT, 
+  OK, 
+  UNPROCESSABLE_CONTENT,
+} from '../../../src/Utils/httpStatusCodes';
 import { carNotFound, invalidId } from '../../../src/Utils/errorMessages';
 
 describe('Integration tests for /cars route', function () {
@@ -92,6 +98,40 @@ describe('Integration tests for /cars route', function () {
   
       await request(app)
         .put('/cars/invalid-id')
+        .send(mocks.car)
+        .expect(UNPROCESSABLE_CONTENT)
+        .expect({ message: invalidId });
+    });
+  });
+
+  describe('DELETE /cars/:id', function () {
+    afterEach(function () {
+      Sinon.restore();
+    });
+  
+    it('should be able to delete a car by its id', async function () {
+      Sinon.stub(Model, 'findByIdAndDelete').resolves(mocks.carList[0]);
+  
+      await request(app)
+        .delete(`/cars/${mocks.carId}`)
+        .expect(NO_CONTENT);
+    });
+  
+    it('should throw NotFound error if car does not exists in the database', async function () {
+      Sinon.stub(Model, 'findByIdAndDelete').resolves(null);
+  
+      await request(app)
+        .delete(`/cars/${mocks.carId}`)
+        .send(mocks.car)
+        .expect(NOT_FOUND)
+        .expect({ message: carNotFound });
+    });
+  
+    it('should throw UnprocessableContent error if id is invalid', async function () {
+      Sinon.stub(Model, 'findByIdAndDelete').resolves(null);
+  
+      await request(app)
+        .delete('/cars/invalid-id')
         .send(mocks.car)
         .expect(UNPROCESSABLE_CONTENT)
         .expect({ message: invalidId });

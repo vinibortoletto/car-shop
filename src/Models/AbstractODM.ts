@@ -28,4 +28,10 @@ export default class AbstractODM<T> {
   ): Promise<T | null> {
     return this._model.findByIdAndUpdate(id, obj, { new: true });
   }
+
+  public async findByIdAndDelete(
+    id: string,
+  ): Promise<T | null> {
+    return this._model.findByIdAndDelete(id);
+  }
 }

@@ -6,6 +6,11 @@ import { carNotFound } from '../Utils/errorMessages';
 
 export default class CarService {
   private _model = new CarODM();
+
+  private createCarDomain(car: ICar | null): Car | null {
+    if (!car) return null;
+    return new Car(car);
+  }
   
   public async create(newCar: ICar): Promise<ICar> {
     const unformattedCar: ICar = await this._model.create(newCar);

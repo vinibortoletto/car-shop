@@ -1,16 +1,14 @@
 import request from 'supertest';
 import { Model } from 'mongoose';
 import Sinon from 'sinon';
-import * as mocks from '../../mocks/carsMocks';
 import app from '../../../src/app';
-import { 
-  CREATED, 
-  NOT_FOUND, 
-  NO_CONTENT, 
-  OK, 
-  UNPROCESSABLE_CONTENT,
-} from '../../../src/Utils/httpStatusCodes';
+import * as mocks from '../../mocks/carsMocks';
+import * as status from '../../../src/Utils/httpStatusCodes';
 import { carNotFound, invalidId } from '../../../src/Utils/errorMessages';
+
+const ROUTE = '/cars';
+const ROUTE_WITH_VALID_ID = `${ROUTE}/${mocks.carId}`;
+const ROUTE_WITH_INVALID_ID = `${ROUTE}/invalid-id`;
 
 describe('Integration tests for /cars route', function () {
   describe('POST /cars', function () {
@@ -18,9 +16,9 @@ describe('Integration tests for /cars route', function () {
       Sinon.stub(Model, 'create').resolves(mocks.carList[0]);
   
       await request(app)
-        .post('/cars')
+        .post(ROUTE)
         .send(mocks.car)
-        .expect(CREATED)
+        .expect(status.CREATED)
         .expect(mocks.carList[0]);
     });
   });
@@ -30,8 +28,8 @@ describe('Integration tests for /cars route', function () {
       Sinon.stub(Model, 'find').resolves(mocks.carList);
   
       await request(app)
-        .get('/cars')
-        .expect(OK)
+        .get(ROUTE)
+        .expect(status.OK)
         .expect(mocks.carList);
     });
   });
@@ -45,8 +43,8 @@ describe('Integration tests for /cars route', function () {
       Sinon.stub(Model, 'findById').resolves(mocks.carList[0]);
   
       await request(app)
-        .get(`/cars/${mocks.carId}`)
-        .expect(OK)
+        .get(ROUTE_WITH_VALID_ID)
+        .expect(status.OK)
         .expect(mocks.carList[0]);
     });
   
@@ -54,8 +52,8 @@ describe('Integration tests for /cars route', function () {
       Sinon.stub(Model, 'findById').resolves(null);
   
       await request(app)
-        .get(`/cars/${mocks.carId}`)
-        .expect(NOT_FOUND)
+        .get(ROUTE_WITH_VALID_ID)
+        .expect(status.NOT_FOUND)
         .expect({ message: carNotFound });
     });
   
@@ -63,8 +61,8 @@ describe('Integration tests for /cars route', function () {
       Sinon.stub(Model, 'findById').resolves(null);
   
       await request(app)
-        .get('/cars/invalid-id')
-        .expect(UNPROCESSABLE_CONTENT)
+        .get(ROUTE_WITH_INVALID_ID)
+        .expect(status.UNPROCESSABLE_CONTENT)
         .expect({ message: invalidId });
     });
   });
@@ -78,8 +76,8 @@ describe('Integration tests for /cars route', function () {
       Sinon.stub(Model, 'findByIdAndUpdate').resolves(mocks.carList[0]);
   
       await request(app)
-        .put(`/cars/${mocks.carId}`)
-        .expect(OK)
+        .put(ROUTE_WITH_VALID_ID)
+        .expect(status.OK)
         .expect(mocks.carList[0]);
     });
   
@@ -87,9 +85,9 @@ describe('Integration tests for /cars route', function () {
       Sinon.stub(Model, 'findByIdAndUpdate').resolves(null);
   
       await request(app)
-        .put(`/cars/${mocks.carId}`)
+        .put(ROUTE_WITH_VALID_ID)
         .send(mocks.car)
-        .expect(NOT_FOUND)
+        .expect(status.NOT_FOUND)
         .expect({ message: carNotFound });
     });
   
@@ -97,9 +95,9 @@ describe('Integration tests for /cars route', function () {
       Sinon.stub(Model, 'findByIdAndUpdate').resolves(null);
   
       await request(app)
-        .put('/cars/invalid-id')
+        .put(ROUTE_WITH_INVALID_ID)
         .send(mocks.car)
-        .expect(UNPROCESSABLE_CONTENT)
+        .expect(status.UNPROCESSABLE_CONTENT)
         .expect({ message: invalidId });
     });
   });
@@ -113,17 +111,17 @@ describe('Integration tests for /cars route', function () {
       Sinon.stub(Model, 'findByIdAndDelete').resolves(mocks.carList[0]);
   
       await request(app)
-        .delete(`/cars/${mocks.carId}`)
-        .expect(NO_CONTENT);
+        .delete(ROUTE_WITH_VALID_ID)
+        .expect(status.NO_CONTENT);
     });
   
     it('should throw NotFound error if car does not exists in the database', async function () {
       Sinon.stub(Model, 'findByIdAndDelete').resolves(null);
   
       await request(app)
-        .delete(`/cars/${mocks.carId}`)
+        .delete(ROUTE_WITH_VALID_ID)
         .send(mocks.car)
-        .expect(NOT_FOUND)
+        .expect(status.NOT_FOUND)
         .expect({ message: carNotFound });
     });
   
@@ -131,9 +129,9 @@ describe('Integration tests for /cars route', function () {
       Sinon.stub(Model, 'findByIdAndDelete').resolves(null);
   
       await request(app)
-        .delete('/cars/invalid-id')
+        .delete(ROUTE_WITH_INVALID_ID)
         .send(mocks.car)
-        .expect(UNPROCESSABLE_CONTENT)
+        .expect(status.UNPROCESSABLE_CONTENT)
         .expect({ message: invalidId });
     });
   });

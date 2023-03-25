@@ -1,36 +1,36 @@
 import { Router } from 'express';
-import MotorcycleController from '../Controllers/MotorcycleController';
-import ValidateId from '../Middlewares/ValidateId';
-import MotorcycleService from '../Services/MotorcycleService';
+import { MotorcycleController } from '../Controllers';
+import { ValidateId } from '../Middlewares';
+import { MotorcycleService } from '../Services';
 
 const motorcycleRouter = Router();
 const service = new MotorcycleService();
 const controller = new MotorcycleController(service);
 
 motorcycleRouter.post(
-  '/motorcycles', 
+  '/', 
   controller.create.bind(controller),
 );
 
 motorcycleRouter.get(
-  '/motorcycles', 
+  '/', 
   controller.find.bind(controller),
 );
 
 motorcycleRouter.get(
-  '/motorcycles/:id',
+  '/:id',
   ValidateId.validate,
   controller.findById.bind(controller),
 );
 
 motorcycleRouter.put(
-  '/motorcycles/:id',
+  '/:id',
   ValidateId.validate,
   controller.findByIdAndUpdate.bind(controller),
 );
 
 motorcycleRouter.delete(
-  '/motorcycles/:id', 
+  '/:id', 
   ValidateId.validate,
   controller.findByIdAndDelete.bind(controller),
 );

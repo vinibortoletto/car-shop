@@ -1,5 +1,5 @@
 import { UpdateQuery } from 'mongoose';
-import NotFound from '../Errors/NotFound';
+import { NotFound } from '../Errors';
 import { AbstractODM } from '../Models';
 
 export default class AbstractService<I, D> {

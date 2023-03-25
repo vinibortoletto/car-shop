@@ -1,14 +1,22 @@
 import { Router } from 'express';
-import CarController from '../Controllers/CarController';
-import ValidateId from '../Middlewares/ValidateId';
-import CarService from '../Services/CarService';
+import { CarController } from '../Controllers';
+import { ValidateId } from '../Middlewares';
+import { CarService } from '../Services';
 
 const carRouter = Router();
 const service = new CarService();
 const controller = new CarController(service);
 
-carRouter.post('/cars', controller.create.bind(controller));
-carRouter.get('/cars', controller.find.bind(controller));
+carRouter.post(
+  '/cars', 
+  controller.create.bind(controller),
+);
+
+carRouter.get(
+  '/cars', 
+  controller.find.bind(controller),
+);
+  
 carRouter.get(
   '/cars/:id', 
   ValidateId.validate,

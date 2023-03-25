@@ -2,11 +2,14 @@ import { expect } from 'chai';
 import { Model } from 'mongoose';
 import Sinon from 'sinon';
 import * as mocks from '../../mocks/carsMocks';
-import ICar from '../../../src/Interfaces/ICar';
-import CarService from '../../../src/Services/CarService';
-import Car from '../../../src/Domains/Car';
 import { carNotFound } from '../../../src/Utils/errorMessages';
 import { NOT_FOUND } from '../../../src/Utils/httpStatusCodes';
+import { CarService } from '../../../src/Services';
+import { ICar } from '../../../src/Interfaces';
+import { Car } from '../../../src/Domains';
+
+const CAR_NOT_FOUND_DESCRIPTION = `should throw NotFound error if 
+car does not exists in the database`;
 
 describe('Unit tests for "CarService" class', function () {
   const carService = new CarService();
@@ -41,7 +44,7 @@ describe('Unit tests for "CarService" class', function () {
       expect(result).to.deep.equal(mocks.carList[0]);
     });
   
-    it('should throw NotFound error if car does not exists in the database', async function () {
+    it(CAR_NOT_FOUND_DESCRIPTION, async function () {
       Sinon.stub(Model, 'findById').resolves(null);
   
       try {
@@ -61,7 +64,7 @@ describe('Unit tests for "CarService" class', function () {
       expect(result).to.deep.equal(mocks.carList[0]);
     });
   
-    it('should throw NotFound error if car does not exists in the database', async function () {
+    it(CAR_NOT_FOUND_DESCRIPTION, async function () {
       Sinon.stub(Model, 'findByIdAndUpdate').resolves(null);
   
       try {
@@ -81,7 +84,7 @@ describe('Unit tests for "CarService" class', function () {
       expect(result).to.deep.equal(true);
     });
   
-    it('should throw NotFound error if car does not exists in the database', async function () {
+    it(CAR_NOT_FOUND_DESCRIPTION, async function () {
       Sinon.stub(Model, 'findByIdAndDelete').resolves(null);
   
       try {

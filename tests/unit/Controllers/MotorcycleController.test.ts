@@ -3,11 +3,14 @@ import { Request, Response } from 'express';
 import Sinon, { SinonStub } from 'sinon';
 import { MotorcycleController } from '../../../src/Controllers';
 import { Motorcycle } from '../../../src/Domains';
-import NotFound from '../../../src/Errors/NotFound';
+import { NotFound } from '../../../src/Errors';
 import { MotorcycleService } from '../../../src/Services';
 import { motorcycleNotFound } from '../../../src/Utils/errorMessages';
 import { CREATED, NO_CONTENT, OK } from '../../../src/Utils/httpStatusCodes';
 import * as mocks from '../../mocks/motorcyclesMocks';
+
+const MOTORCYCLE_NOT_FOUND_DESCRIPTION = `'should throw NotFound error if 
+motorcycle does not exists in the database'`;
 
 describe('Unit tests for "MotorcycleController" class', function () {
   let req = {} as Request;
@@ -77,17 +80,14 @@ describe('Unit tests for "MotorcycleController" class', function () {
       expect((res.json as SinonStub).calledWith(output)).to.equal(true);
     });
   
-    it(
-      'should throw NotFound error if motorcycle does not exists in the database', 
-      async function () {
-        req = { params: 'wrong id' } as unknown as Request;
-        const error = new NotFound(motorcycleNotFound);
-        Sinon.stub(service, 'findById').rejects(error);
+    it(MOTORCYCLE_NOT_FOUND_DESCRIPTION, async function () {
+      req = { params: 'wrong id' } as unknown as Request;
+      const error = new NotFound(motorcycleNotFound);
+      Sinon.stub(service, 'findById').rejects(error);
   
-        await controller.findById(req, res, next);
-        expect(next.calledWith(error)).to.equal(true);
-      },
-    );
+      await controller.findById(req, res, next);
+      expect(next.calledWith(error)).to.equal(true);
+    });
   });
 
   describe('"findByIdAndUpdate" method', function () {
@@ -104,21 +104,18 @@ describe('Unit tests for "MotorcycleController" class', function () {
       expect((res.json as SinonStub).calledWith(output)).to.equal(true);
     });
   
-    it(
-      'should throw NotFound error if motorcycle does not exists in the database', 
-      async function () {
-        req = { 
-          params: { id: 'wrong id' }, 
-          body: mocks.motorcycle,
-        } as unknown as Request;
+    it(MOTORCYCLE_NOT_FOUND_DESCRIPTION, async function () {
+      req = { 
+        params: { id: 'wrong id' }, 
+        body: mocks.motorcycle,
+      } as unknown as Request;
   
-        const error = new NotFound(motorcycleNotFound);
-        Sinon.stub(service, 'findById').rejects(error);
+      const error = new NotFound(motorcycleNotFound);
+      Sinon.stub(service, 'findById').rejects(error);
   
-        await controller.findById(req, res, next);
-        expect(next.calledWith(error)).to.equal(true);
-      },
-    );
+      await controller.findById(req, res, next);
+      expect(next.calledWith(error)).to.equal(true);
+    });
   });
 
   describe('"findByIdAndDelete" method', function () {
@@ -133,20 +130,17 @@ describe('Unit tests for "MotorcycleController" class', function () {
       expect((res.status as SinonStub).calledWith(NO_CONTENT)).to.equal(true);
     });
   
-    it(
-      'should throw NotFound error if motorcycle does not exists in the database',
-      async function () {
-        req = { 
-          params: { id: 'wrong id' }, 
-          body: mocks.motorcycle,
-        } as unknown as Request;
+    it(MOTORCYCLE_NOT_FOUND_DESCRIPTION, async function () {
+      req = { 
+        params: { id: 'wrong id' }, 
+        body: mocks.motorcycle,
+      } as unknown as Request;
   
-        const error = new NotFound(motorcycleNotFound);
-        Sinon.stub(service, 'findByIdAndDelete').rejects(error);
+      const error = new NotFound(motorcycleNotFound);
+      Sinon.stub(service, 'findByIdAndDelete').rejects(error);
   
-        await controller.findByIdAndDelete(req, res, next);
-        expect(next.calledWith(error)).to.equal(true);
-      },
-    );
+      await controller.findByIdAndDelete(req, res, next);
+      expect(next.calledWith(error)).to.equal(true);
+    });
   });
 });

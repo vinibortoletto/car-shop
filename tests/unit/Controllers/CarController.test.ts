@@ -1,13 +1,16 @@
 import { expect } from 'chai';
 import { Request, Response } from 'express';
 import Sinon, { SinonStub } from 'sinon';
-import CarController from '../../../src/Controllers/CarController';
-import Car from '../../../src/Domains/Car';
-import NotFound from '../../../src/Errors/NotFound';
-import CarService from '../../../src/Services/CarService';
+import { CarController } from '../../../src/Controllers';
+import { Car } from '../../../src/Domains';
+import { NotFound } from '../../../src/Errors';
+import { CarService } from '../../../src/Services';
 import { carNotFound } from '../../../src/Utils/errorMessages';
 import { CREATED, NO_CONTENT, OK } from '../../../src/Utils/httpStatusCodes';
 import * as mocks from '../../mocks/carsMocks';
+
+const CAR_NOT_FOUND_DESCRIPTION = `should throw NotFound error if car 
+does not exists in the database`;
 
 describe('Unit tests for "CarController" class', function () {
   let req = {} as Request;
@@ -75,7 +78,7 @@ describe('Unit tests for "CarController" class', function () {
       expect((res.json as SinonStub).calledWith(output)).to.equal(true);
     });
   
-    it('should throw NotFound error if car does not exists in the database', async function () {
+    it(CAR_NOT_FOUND_DESCRIPTION, async function () {
       req = { params: 'wrong id' } as unknown as Request;
       const error = new NotFound(carNotFound);
       Sinon.stub(service, 'findById').rejects(error);
@@ -99,7 +102,7 @@ describe('Unit tests for "CarController" class', function () {
       expect((res.json as SinonStub).calledWith(output)).to.equal(true);
     });
   
-    it('should throw NotFound error if car does not exists in the database', async function () {
+    it(CAR_NOT_FOUND_DESCRIPTION, async function () {
       req = { 
         params: { id: 'wrong id' }, 
         body: mocks.car,
@@ -125,7 +128,7 @@ describe('Unit tests for "CarController" class', function () {
       expect((res.status as SinonStub).calledWith(NO_CONTENT)).to.equal(true);
     });
   
-    it('should throw NotFound error if car does not exists in the database', async function () {
+    it(CAR_NOT_FOUND_DESCRIPTION, async function () {
       req = { 
         params: { id: 'wrong id' }, 
         body: mocks.car,

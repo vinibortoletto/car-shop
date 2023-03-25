@@ -3,7 +3,7 @@ import { Model } from 'mongoose';
 import Sinon from 'sinon';
 import { Motorcycle } from '../../../src/Domains';
 import { IMotorcycle } from '../../../src/Interfaces';
-import MotorcycleService from '../../../src/Services/MotorcycleService';
+import { MotorcycleService } from '../../../src/Services';
 import { motorcycleNotFound } from '../../../src/Utils/errorMessages';
 import { NOT_FOUND } from '../../../src/Utils/httpStatusCodes';
 import * as mocks from '../../mocks/motorcyclesMocks';

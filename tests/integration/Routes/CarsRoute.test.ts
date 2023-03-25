@@ -10,6 +10,12 @@ const ROUTE = '/cars';
 const ROUTE_WITH_VALID_ID = `${ROUTE}/${mocks.carId}`;
 const ROUTE_WITH_INVALID_ID = `${ROUTE}/invalid-id`;
 
+const CAR_NOT_FOUND_DESCRIPTION = `should throw NotFound error if car 
+does not exists in the database`;
+
+const INVALID_ID_DESCRIPTION = `should throw UnprocessableContent 
+error if id is invalid`;
+
 describe('Integration tests for /cars route', function () {
   describe('POST /cars', function () {
     it('should be able to create new car', async function () {
@@ -48,7 +54,7 @@ describe('Integration tests for /cars route', function () {
         .expect(mocks.carList[0]);
     });
   
-    it('should throw NotFound error if car does not exists in the database', async function () {
+    it(CAR_NOT_FOUND_DESCRIPTION, async function () {
       Sinon.stub(Model, 'findById').resolves(null);
   
       await request(app)
@@ -57,7 +63,7 @@ describe('Integration tests for /cars route', function () {
         .expect({ message: carNotFound });
     });
   
-    it('should throw UnprocessableContent error if id is invalid', async function () {
+    it(INVALID_ID_DESCRIPTION, async function () {
       Sinon.stub(Model, 'findById').resolves(null);
   
       await request(app)
@@ -81,7 +87,7 @@ describe('Integration tests for /cars route', function () {
         .expect(mocks.carList[0]);
     });
   
-    it('should throw NotFound error if car does not exists in the database', async function () {
+    it(CAR_NOT_FOUND_DESCRIPTION, async function () {
       Sinon.stub(Model, 'findByIdAndUpdate').resolves(null);
   
       await request(app)
@@ -91,7 +97,7 @@ describe('Integration tests for /cars route', function () {
         .expect({ message: carNotFound });
     });
   
-    it('should throw UnprocessableContent error if id is invalid', async function () {
+    it(INVALID_ID_DESCRIPTION, async function () {
       Sinon.stub(Model, 'findByIdAndUpdate').resolves(null);
   
       await request(app)
@@ -115,7 +121,7 @@ describe('Integration tests for /cars route', function () {
         .expect(status.NO_CONTENT);
     });
   
-    it('should throw NotFound error if car does not exists in the database', async function () {
+    it(CAR_NOT_FOUND_DESCRIPTION, async function () {
       Sinon.stub(Model, 'findByIdAndDelete').resolves(null);
   
       await request(app)
@@ -125,7 +131,7 @@ describe('Integration tests for /cars route', function () {
         .expect({ message: carNotFound });
     });
   
-    it('should throw UnprocessableContent error if id is invalid', async function () {
+    it(INVALID_ID_DESCRIPTION, async function () {
       Sinon.stub(Model, 'findByIdAndDelete').resolves(null);
   
       await request(app)

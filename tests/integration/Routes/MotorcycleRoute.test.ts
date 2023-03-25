@@ -2,9 +2,19 @@ import request from 'supertest';
 import { Model } from 'mongoose';
 import Sinon from 'sinon';
 import app from '../../../src/app';
-import { CREATED, NOT_FOUND, NO_CONTENT, OK, UNPROCESSABLE_CONTENT } from '../../../src/Utils/httpStatusCodes';
+import * as status from '../../../src/Utils/httpStatusCodes';
 import * as mocks from '../../mocks/motorcyclesMocks';
 import { invalidId, motorcycleNotFound } from '../../../src/Utils/errorMessages';
+
+const ROUTE = '/motorcycles';
+const ROUTE_WITH_VALID_ID = `${ROUTE}/${mocks.motorcycleId}`;
+const ROUTE_WITH_INVALID_ID = `${ROUTE}/invalid-id`;
+
+const MOTORCYCLE_NOT_FOUND_DESCRIPTION = `should throw NotFound error if motorcycle 
+does not exists in the database`;
+
+const INVALID_ID_DESCRIPTION = `should throw UnprocessableContent 
+error if id is invalid`;
 
 describe('Integration tests for "motorcycles" routes', function () {
   describe('POST /motorcycles', function () {
@@ -12,9 +22,9 @@ describe('Integration tests for "motorcycles" routes', function () {
       Sinon.stub(Model, 'create').resolves(mocks.motorcycleList[0]);
   
       await request(app)
-        .post('/motorcycles')
+        .post(ROUTE)
         .send(mocks.motorcycle)
-        .expect(CREATED)
+        .expect(status.CREATED)
         .expect(mocks.motorcycleList[0]);
     });
   });
@@ -24,8 +34,8 @@ describe('Integration tests for "motorcycles" routes', function () {
       Sinon.stub(Model, 'find').resolves(mocks.motorcycleList);
   
       await request(app)
-        .get('/motorcycles')
-        .expect(OK)
+        .get(ROUTE)
+        .expect(status.OK)
         .expect(mocks.motorcycleList);
     });
   });
@@ -39,29 +49,29 @@ describe('Integration tests for "motorcycles" routes', function () {
       Sinon.stub(Model, 'findById').resolves(mocks.motorcycleList[0]);
   
       await request(app)
-        .get(`/motorcycles/${mocks.motorcycleId}`)
-        .expect(OK)
+        .get(ROUTE_WITH_VALID_ID)
+        .expect(status.OK)
         .expect(mocks.motorcycleList[0]);
     });
   
     it(
-      'should throw NotFound error if motorcycle does not exists in the database', 
+      MOTORCYCLE_NOT_FOUND_DESCRIPTION, 
       async function () {
         Sinon.stub(Model, 'findById').resolves(null);
   
         await request(app)
-          .get(`/motorcycles/${mocks.motorcycleId}`)
-          .expect(NOT_FOUND)
+          .get(ROUTE_WITH_VALID_ID)
+          .expect(status.NOT_FOUND)
           .expect({ message: motorcycleNotFound });
       },
     );
   
-    it('should throw UnprocessableContent error if id is invalid', async function () {
+    it(INVALID_ID_DESCRIPTION, async function () {
       Sinon.stub(Model, 'findById').resolves(null);
   
       await request(app)
-        .get('/motorcycles/invalid-id')
-        .expect(UNPROCESSABLE_CONTENT)
+        .get(ROUTE_WITH_INVALID_ID)
+        .expect(status.UNPROCESSABLE_CONTENT)
         .expect({ message: invalidId });
     });
   });
@@ -75,31 +85,28 @@ describe('Integration tests for "motorcycles" routes', function () {
       Sinon.stub(Model, 'findByIdAndUpdate').resolves(mocks.motorcycleList[0]);
   
       await request(app)
-        .put(`/motorcycles/${mocks.motorcycleId}`)
-        .expect(OK)
+        .put(ROUTE_WITH_VALID_ID)
+        .expect(status.OK)
         .expect(mocks.motorcycleList[0]);
     });
   
-    it(
-      'should throw NotFound error if motorcycle does not exists in the database',
-      async function () {
-        Sinon.stub(Model, 'findByIdAndUpdate').resolves(null);
-  
-        await request(app)
-          .put(`/motorcycles/${mocks.motorcycleId}`)
-          .send(mocks.motorcycle)
-          .expect(NOT_FOUND)
-          .expect({ message: motorcycleNotFound });
-      },
-    );
-  
-    it('should throw UnprocessableContent error if id is invalid', async function () {
+    it(MOTORCYCLE_NOT_FOUND_DESCRIPTION, async function () {
       Sinon.stub(Model, 'findByIdAndUpdate').resolves(null);
   
       await request(app)
-        .put('/motorcycles/invalid-id')
+        .put(ROUTE_WITH_VALID_ID)
         .send(mocks.motorcycle)
-        .expect(UNPROCESSABLE_CONTENT)
+        .expect(status.NOT_FOUND)
+        .expect({ message: motorcycleNotFound });
+    });
+  
+    it(INVALID_ID_DESCRIPTION, async function () {
+      Sinon.stub(Model, 'findByIdAndUpdate').resolves(null);
+  
+      await request(app)
+        .put(ROUTE_WITH_INVALID_ID)
+        .send(mocks.motorcycle)
+        .expect(status.UNPROCESSABLE_CONTENT)
         .expect({ message: invalidId });
     });
   });
@@ -113,30 +120,27 @@ describe('Integration tests for "motorcycles" routes', function () {
       Sinon.stub(Model, 'findByIdAndDelete').resolves(mocks.motorcycleList[0]);
   
       await request(app)
-        .delete(`/motorcycles/${mocks.motorcycleId}`)
-        .expect(NO_CONTENT);
+        .delete(ROUTE_WITH_VALID_ID)
+        .expect(status.NO_CONTENT);
     });
   
-    it(
-      'should throw NotFound error if motorcycle does not exists in the database',
-      async function () {
-        Sinon.stub(Model, 'findByIdAndDelete').resolves(null);
-  
-        await request(app)
-          .delete(`/motorcycles/${mocks.motorcycleId}`)
-          .send(mocks.motorcycle)
-          .expect(NOT_FOUND)
-          .expect({ message: motorcycleNotFound });
-      },
-    );
-  
-    it('should throw UnprocessableContent error if id is invalid', async function () {
+    it(MOTORCYCLE_NOT_FOUND_DESCRIPTION, async function () {
       Sinon.stub(Model, 'findByIdAndDelete').resolves(null);
   
       await request(app)
-        .delete('/motorcycles/invalid-id')
+        .delete(ROUTE_WITH_VALID_ID)
         .send(mocks.motorcycle)
-        .expect(UNPROCESSABLE_CONTENT)
+        .expect(status.NOT_FOUND)
+        .expect({ message: motorcycleNotFound });
+    });
+  
+    it(INVALID_ID_DESCRIPTION, async function () {
+      Sinon.stub(Model, 'findByIdAndDelete').resolves(null);
+  
+      await request(app)
+        .delete(ROUTE_WITH_INVALID_ID)
+        .send(mocks.motorcycle)
+        .expect(status.UNPROCESSABLE_CONTENT)
         .expect({ message: invalidId });
     });
   });

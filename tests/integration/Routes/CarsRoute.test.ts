@@ -17,6 +17,10 @@ const INVALID_ID_DESCRIPTION = `should throw UnprocessableContent
 error if id is invalid`;
 
 describe('Integration tests for /cars route', function () {
+  afterEach(function () {
+    Sinon.restore();
+  });
+  
   describe('POST /cars', function () {
     it('should be able to create new car', async function () {
       Sinon.stub(Model, 'create').resolves(mocks.carList[0]);
@@ -41,10 +45,6 @@ describe('Integration tests for /cars route', function () {
   });
 
   describe('GET /cars/:id', function () {
-    afterEach(function () {
-      Sinon.restore();
-    });
-  
     it('should be able to find a car by its id', async function () {
       Sinon.stub(Model, 'findById').resolves(mocks.carList[0]);
   
@@ -74,10 +74,6 @@ describe('Integration tests for /cars route', function () {
   });
 
   describe('PUT /cars/:id', function () {
-    afterEach(function () {
-      Sinon.restore();
-    });
-  
     it('should be able to update a car by its id', async function () {
       Sinon.stub(Model, 'findByIdAndUpdate').resolves(mocks.carList[0]);
   
@@ -109,10 +105,6 @@ describe('Integration tests for /cars route', function () {
   });
 
   describe('DELETE /cars/:id', function () {
-    afterEach(function () {
-      Sinon.restore();
-    });
-  
     it('should be able to delete a car by its id', async function () {
       Sinon.stub(Model, 'findByIdAndDelete').resolves(mocks.carList[0]);
   

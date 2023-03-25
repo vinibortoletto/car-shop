@@ -17,6 +17,10 @@ const INVALID_ID_DESCRIPTION = `should throw UnprocessableContent
 error if id is invalid`;
 
 describe('Integration tests for "motorcycles" routes', function () {
+  afterEach(function () {
+    Sinon.restore();
+  });
+  
   describe('POST /motorcycles', function () {
     it('should be able to create new motorcycle', async function () {
       Sinon.stub(Model, 'create').resolves(mocks.motorcycleList[0]);
@@ -41,10 +45,6 @@ describe('Integration tests for "motorcycles" routes', function () {
   });
 
   describe('GET /motorcycles/:id', function () {
-    afterEach(function () {
-      Sinon.restore();
-    });
-  
     it('should be able to find a motorcycle by its id', async function () {
       Sinon.stub(Model, 'findById').resolves(mocks.motorcycleList[0]);
   
@@ -54,17 +54,14 @@ describe('Integration tests for "motorcycles" routes', function () {
         .expect(mocks.motorcycleList[0]);
     });
   
-    it(
-      MOTORCYCLE_NOT_FOUND_DESCRIPTION, 
-      async function () {
-        Sinon.stub(Model, 'findById').resolves(null);
+    it(MOTORCYCLE_NOT_FOUND_DESCRIPTION, async function () {
+      Sinon.stub(Model, 'findById').resolves(null);
   
-        await request(app)
-          .get(ROUTE_WITH_VALID_ID)
-          .expect(status.NOT_FOUND)
-          .expect({ message: motorcycleNotFound });
-      },
-    );
+      await request(app)
+        .get(ROUTE_WITH_VALID_ID)
+        .expect(status.NOT_FOUND)
+        .expect({ message: motorcycleNotFound });
+    });
   
     it(INVALID_ID_DESCRIPTION, async function () {
       Sinon.stub(Model, 'findById').resolves(null);
@@ -77,10 +74,6 @@ describe('Integration tests for "motorcycles" routes', function () {
   });
 
   describe('PUT /motorcycles/:id', function () {
-    afterEach(function () {
-      Sinon.restore();
-    });
-  
     it('should be able to update a motorcycle by its id', async function () {
       Sinon.stub(Model, 'findByIdAndUpdate').resolves(mocks.motorcycleList[0]);
   
@@ -112,10 +105,6 @@ describe('Integration tests for "motorcycles" routes', function () {
   });
 
   describe('DELETE /motorcycles/:id', function () {
-    afterEach(function () {
-      Sinon.restore();
-    });
-  
     it('should be able to delete a motorcycle by its id', async function () {
       Sinon.stub(Model, 'findByIdAndDelete').resolves(mocks.motorcycleList[0]);
   
